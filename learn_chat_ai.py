@@ -5,6 +5,9 @@ import readline
 
 MAX_HISTORY_TURNS = 4  # 記憶するターン数（user/assistantで1ターン）
 
+class ExitChatException(Exception):
+    pass
+
 api_key = input("Enter your OpenAI API key: ")
 client = openai.OpenAI(api_key=api_key)
 
@@ -35,10 +38,10 @@ def ask_ai(prompt, message_history):
         print("⚠️ OpenAI APIの利用上限（無料枠または残高）を超えています。")
         print("OpenAIのUsageページ（https://platform.openai.com/usage）やBillingページで利用状況・課金状況を確認してください。")
         print("APIキーの無料枠が終了した場合は、OpenAIにログインして課金設定を行う必要があります。")
-        return None
+        raise ExitChatException()
     except openai.OpenAIError as e:
         print("⚠️ OpenAI APIとの通信中にエラーが発生しました。詳細：", str(e))
-        return None
+        raise ExitChatException()
 
 def get_next_topic():
     prompt = "Aとして、英語で質問をしてください。"
@@ -49,28 +52,26 @@ def evaluate_response(user_english):
     return ask_ai(prompt, conversation_history)
 
 def main():
-    # REPL本体
-    while True:
-        # 1. AI による質問
-        ai_question = get_next_topic()
-        if ai_question is None:
-            print("プログラムを終了します。")
-            break
-        print("--------")
-        print("AI:", ai_question)
-        conversation_history.append({"role": "assistant", "content": ai_question})
+    print("Type your message or press Ctrl+C / Ctrl+D to exit.")
+    try:
+        # REPL本体
+        while True:
+            # 1. AI による質問
+            ai_question = get_next_topic()
+            print("--------")
+            print("AI:", ai_question)
+            conversation_history.append({"role": "assistant", "content": ai_question})
 
-        # 2. ユーザーの入力
-        user_input = input("あなた（英語）: ")
-        conversation_history.append({"role": "user", "content": user_input})
+            # 2. ユーザーの入力
+            user_input = input("You: ")
+            conversation_history.append({"role": "user", "content": user_input})
 
-        # 3. AI による評価
-        ai_feedback = evaluate_response(user_input)
-        if ai_feedback is None:
-            print("プログラムを終了します。")
-            break
-        print("--------")
-        print("AI の評価:\n", ai_feedback)
+            # 3. AI による評価
+            ai_feedback = evaluate_response(user_input)
+            print("--------")
+            print("Feedback:\n", ai_feedback)
+    except (KeyboardInterrupt, EOFError, ExitChatException):
+        print("\nExiting learn-chat-ai.")
 
 if __name__ == "__main__":
     main()
