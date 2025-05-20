@@ -48,25 +48,29 @@ def evaluate_response(user_english):
     prompt = f"Bとして、次の英文を日本語で評価してください: {user_english}"
     return ask_ai(prompt, conversation_history)
 
-# REPL本体
-while True:
-    # 1. AI による質問
-    ai_question = get_next_topic()
-    if ai_question is None:
-        print("プログラムを終了します。")
-        break
-    print("--------")
-    print("AI:", ai_question)
-    conversation_history.append({"role": "assistant", "content": ai_question})
+def main():
+    # REPL本体
+    while True:
+        # 1. AI による質問
+        ai_question = get_next_topic()
+        if ai_question is None:
+            print("プログラムを終了します。")
+            break
+        print("--------")
+        print("AI:", ai_question)
+        conversation_history.append({"role": "assistant", "content": ai_question})
 
-    # 2. ユーザーの入力
-    user_input = input("あなた（英語）: ")
-    conversation_history.append({"role": "user", "content": user_input})
+        # 2. ユーザーの入力
+        user_input = input("あなた（英語）: ")
+        conversation_history.append({"role": "user", "content": user_input})
 
-    # 3. AI による評価
-    ai_feedback = evaluate_response(user_input)
-    if ai_feedback is None:
-        print("プログラムを終了します。")
-        break
-    print("--------")
-    print("AI の評価:\n", ai_feedback)
+        # 3. AI による評価
+        ai_feedback = evaluate_response(user_input)
+        if ai_feedback is None:
+            print("プログラムを終了します。")
+            break
+        print("--------")
+        print("AI の評価:\n", ai_feedback)
+
+if __name__ == "__main__":
+    main()

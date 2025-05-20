@@ -1,0 +1,13 @@
+[project]
+name = "learn-chat-ai"
+version = "0.1.0"
+description = "A CLI tool for second launguage learning chat with OpenAI"
+dependencies = ["openai"]
+requires-python = ">=3.8"
+
+[project.scripts]
+learn-chat-ai = "learn_chat_ai:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
