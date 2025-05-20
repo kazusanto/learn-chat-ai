@@ -56,8 +56,8 @@ def get_next_topic():
     prompt = f"Act as {ROLE_CONVERSATION} and ask a question in {LEARNER_LANGUAGE}."
     return ask_ai(prompt, conversation_history)
 
-def evaluate_response(user_english):
-    prompt = f"Act as {ROLE_FEEDBACK} and evaluate the following sentence in {FEEDBACK_LANGUAGE}: {user_english}"
+def evaluate_response(response):
+    prompt = f"Act as {ROLE_FEEDBACK} and evaluate the following sentence in {FEEDBACK_LANGUAGE}: {response}"
     return ask_ai(prompt, conversation_history)
 
 def main():
